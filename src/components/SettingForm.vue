@@ -82,52 +82,60 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 import authorizationAPI from "./../apis/authorization";
 import { Toast } from "./../utils/helpers";
 export default {
-  name: 'SettingForm',
-  
+  name: "SettingForm",
   data() {
     return {
-    currentUserTemp: {
-     
-    },
-     
-    }
+      currentUserTemp: {},
+    };
   },
   methods: {
-
-
     async submitSetting(e) {
+      if (
+        this.currentUserTemp.password !== this.currentUserTemp.passwordCheck
+      ) {
+        Toast.fire({
+          icon: "warning",
+          title: "兩次輸入的密碼需相同",
+        });
+        this.passwordCheck = "";
+        return;
+      }
 
+      const form = e.target;
+      const formData = new FormData(form);
+      //刪除passwordCheck,因為後端沒有接
+      formData.delete("passwordCheck");
 
-      const form = e.target
-      const formData = new FormData(form)
-      this.$emit('after-submit-setting', formData)
+      try {
+        //兩次輸入的密碼需相同
+        const response = await authorizationAPI.settingSave(
+          this.currentUser.id,
+          formData
+        );
+        const data = response.data;
+        console.log(data);
 
-      try {       
-        
-
-        
-        //const response = await authorizationAPI.getTweets();//call tweets api (真 但此api尚未完工)   
-        const response = await authorizationAPI.settingSave({
-          id:314,
-          account: this.account,
-          name: this.name,
-          email: this.email,
-          password: this.password,
-          checkPassword: this.passwordCheck,
-        });//call tweets api (假)        
-        const data = response.data
-        console.log(data)
-
-        if (data.status &&  data.status!== "success") {
+        if (data.status && data.status !== "success") {
           throw new Error(data.message);
         }
 
+        Toast.fire({
+          icon: "success",
+          title: `修改成功 !`,
+        });
 
+        let user = {
+          ...this.currentUser,
+          name: data.data.name,
+          account: data.data.account,
+          email: data.data.email,
+        };
 
+        this.$store.commit("setCurrentUser", user);
       } catch (error) {
         console.log(error);
         Toast.fire({
@@ -135,21 +143,18 @@ export default {
           title: error.message,
         });
       }
-
     },
-
-
-     fetchRestaurants () {
-      this.currentUserTemp = JSON.parse( JSON.stringify( this.currentUser ) )
+    fetchCurrentUser() {
+      this.currentUserTemp = JSON.parse(JSON.stringify(this.currentUser));
     },
-
-
   },
   computed: {
-    ...mapState(['currentUser', 'isAuthenticated'])
+    //把vuex資料拿出來,得到currentUser
+    ...mapState(["currentUser", "isAuthenticated"]),
   },
-   created () {
-    this.fetchRestaurants()
+  created() {   
+    //把得到的currentUser複製一份給currentUser.Temp
+    this.fetchCurrentUser();
   },
-}
+};
 </script>

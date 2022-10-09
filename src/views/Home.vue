@@ -4,7 +4,7 @@
       <div class="w100 leftSection"><NavBar /></div>
       <div class="w100 centerSection">
         <h4 class="setting-title main-title">首頁</h4>
-        <TweetList :initial-tweets="tweets"/>
+        <TweetList/>
       </div>
       <div class="w100 rightSection"><RecommandedList /></div>
     </div>
@@ -16,85 +16,8 @@
 import NavBar from "../components/NavBar.vue";
 import RecommandedList from "../components/RecommandedList.vue";
 import TweetList from "../components/TweetList.vue";
-import authorizationAPI from "./../apis/authorization";
-import { Toast } from "./../utils/helpers";
-const dummyData = {
-  tweets: [  
-    {
-      id: 1,
-      account: "apple123",
-      name: "apple",
-      img: "../assets/images/logo-gray.png",
-      contentText: "滿員御禮!",
-      createdAt: "2022-10-08",
-      reply: [
-        "good", "good", "good"
-      ],
-      likeAmount: 520      
-    },
-    {
-      id: 1,
-      account: "apple123",
-      name: "apple",
-      img: "../assets/images/logo-gray.png",
-      contentText: "滿員御禮!",
-      createdAt: "2022-10-08",
-      reply: [
-        "good", "good", "good"
-      ],
-      likeAmount: 520     
-    },
-    {
-      id: 1,
-      account: "apple123",
-      name: "apple",
-      img: "../assets/images/logo-gray.png",
-      contentText: "滿員御禮!",
-      createdAt: "2022-10-08",
-      reply: [
-        "good", "good", "good"
-      ],
-      likeAmount: 520      
-    },  
-    {
-      id: 1,
-      account: "apple123",
-      name: "apple",
-      img: "../assets/images/logo-gray.png",
-      contentText: "滿員御禮!",
-      createdAt: "2022-10-08",
-      reply: [
-        "good", "good", "good"
-      ],
-      likeAmount: 520  
-    },
-    {
-      id: 1,
-      account: "apple123",
-      name: "apple",
-      img: "../assets/images/logo-gray.png",
-      contentText: "滿員御禮!",
-      createdAt: "2022-10-08",
-      reply: [
-        "good", "good", "good"
-      ],
-      likeAmount: 520      
-    },
-    {
-      id: 1,
-      account: "apple123",
-      name: "apple",
-      img: "../assets/images/logo-gray.png",
-      contentText: "滿員御禮!",
-      createdAt: "2022-10-08",
-      reply: [
-        "good", "good", "good"
-      ],
-      likeAmount: 520      
-    },
 
-  ]
-}
+
 
 export default {
   name: "Home",
@@ -102,64 +25,6 @@ export default {
     NavBar,
     RecommandedList,
     TweetList
-  },
-
-  data() {
-    return {
-      tweets: [],
-    }
-  },
-  created() {
-    this.fetchTweets()
-  },
-  methods: {
-    async fetchTweets() {
-        
-
-      try {       
-        
-
-        
-        //const response = await authorizationAPI.getTweets();//call tweets api (真 但此api尚未完工)   
-        const response = await authorizationAPI.Test(14);//call tweets api (假)        
-        const data = response.data
-        console.log(data)
-
-        if (data.status &&  data.status!== "success") {
-          throw new Error(data.message);
-        }
-
-        //先放假資料
-        this.tweets = dummyData.tweets
-
-      } catch (error) {
-        console.log(error);
-        Toast.fire({
-          icon: "error",
-          title: error.message,
-        });
-      }
-
-
-       
-      }
-    }
- 
+  }, 
 };
-
-//串接API用程式碼(async/await語法)
-//async fetchTweets() {
-//      try {
-//        this.isLoading = true
-//        const { data } = await tweetAPI.getAll()
-//        if (data.status === 'error') {
-//          throw new Error(data.message)
-//        }
-//        this.tweets = data
-//        this.isLoading = false
-//      } catch (error) {
-//        this.isLoading = false
-//        console.error
-//      }
-//    }
 </script>
