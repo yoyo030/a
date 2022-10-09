@@ -1,0 +1,31 @@
+
+.form-container {
+  position: relative;
+}
+
+.form-label-group {
+  @extend %settimg-form;
+
+}
+
+.setting-save-button {
+  position: absolute;
+  right: 0;
+  margin: 8px 23px;
+  width: 88px;
+  height: 46px;
+  border-radius: 50px;
+  background-color: $brand;
+  @include font-setting(20px, 400, white, 30px);
+
+}
+
+@media screen and (min-width: 1200px) {
+
+.form-label-group {
+    width: 593px;
+  }
+  
+
+}
+
